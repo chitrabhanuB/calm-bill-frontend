@@ -64,20 +64,21 @@ const Auth = () => {
 
   // ✅ Call your backend to store the user data in MongoDB
   if (token && data.user) {
-    await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users`), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        user_id: data.user.id,
-        full_name: formData.fullName,
-        monthly_income: formData.monthlyIncome,
-        misc_monthly_expenses: formData.miscExpenses,
-        email: formData.email,
-      }),
-    });
+    await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  },
+  body: JSON.stringify({
+    user_id: data.user.id,
+    full_name: formData.fullName,
+    monthly_income: formData.monthlyIncome,
+    misc_monthly_expenses: formData.miscExpenses,
+    email: formData.email,
+  }),
+});
+
   }
 
   toast.success("Account created! Redirecting...");
