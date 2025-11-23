@@ -30,7 +30,7 @@ interface Reminder {
 }
 
 // ✅ Single source of truth for backend URL
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5001";
+const API_BASE = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL;
 
 const Reminders = () => {
   const navigate = useNavigate();

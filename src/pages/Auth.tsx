@@ -64,7 +64,7 @@ const Auth = () => {
 
   // ✅ Call your backend to store the user data in MongoDB
   if (token && data.user) {
-    await fetch("http://localhost:5001/api/users", {
+    await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users`), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
