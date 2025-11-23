@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 264 58% 30%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 264 58% 30%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 264 58% 30%;
+
+    /* Royal Purple - #50207A */
+    --primary: 264 58% 30%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Soft Lavender - #D6B9FC */
+    --secondary: 266 90% 86%;
+    --secondary-foreground: 264 58% 30%;
+
+    --muted: 266 90% 96%;
+    --muted-foreground: 264 30% 50%;
+
+    /* Periwinkle Blue - #838CE5 */
+    --accent: 235 68% 71%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 266 60% 90%;
+    --input: 266 60% 90%;
+    --ring: 264 58% 30%;
+
+    --radius: 1.25rem;
+
+    /* Custom design tokens */
+    --gradient-primary: linear-gradient(135deg, hsl(264, 55%, 40%), hsl(235, 67%, 62%));
+    --gradient-soft: linear-gradient(180deg, hsl(0 0% 100%), hsl(266 90% 96%));
+    --shadow-card: 0 2px 20px -5px hsl(264 58% 30% / 0.08);
+    --shadow-hover: 0 8px 30px -8px hsl(264 58% 30% / 0.15);
+
+    /* Status colors */
+    --status-overdue: 0 84% 60%;
+    --status-due-soon: 45 93% 47%;
+    --status-ok: 142 71% 45%;
+  }
+
+  .dark {
+    --background: 264 30% 8%;
+    --foreground: 266 90% 86%;
+
+    --card: 264 40% 12%;
+    --card-foreground: 266 90% 86%;
+
+    --popover: 264 40% 12%;
+    --popover-foreground: 266 90% 86%;
+
+    --primary: 266 90% 86%;
+    --primary-foreground: 264 58% 30%;
+
+    --secondary: 264 40% 18%;
+    --secondary-foreground: 266 90% 86%;
+
+    --muted: 264 40% 18%;
+    --muted-foreground: 266 50% 65%;
+
+    --accent: 235 68% 71%;
+    --accent-foreground: 264 58% 30%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 266 90% 86%;
+
+    --border: 264 40% 18%;
+    --input: 264 40% 18%;
+    --ring: 266 90% 86%;
+
+    --shadow-card: 0 2px 20px -5px hsl(0 0% 0% / 0.3);
+    --shadow-hover: 0 8px 30px -8px hsl(0 0% 0% / 0.4);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+}
+
+@layer utilities {
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .gradient-soft {
+    background: var(--gradient-soft);
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .shadow-hover {
+    box-shadow: var(--shadow-hover);
+  }
+}
+
+.gradient-soft {
+  background: linear-gradient(135deg, #f9fafb 0%, #eef2ff 100%);
+  min-height: 100vh;
+}
