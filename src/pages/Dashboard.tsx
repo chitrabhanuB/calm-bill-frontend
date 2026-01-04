@@ -65,11 +65,12 @@ const Dashboard = () => {
       const token = session?.access_token;
 
       const response = await fetch(
-        `http://localhost:5001/api/reminders/${userId}`,
-        {
-          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-        }
-      );
+  `${import.meta.env.VITE_API_BASE_URL}/api/reminders/${userId}`,
+  {
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+  }
+);
+
 
       const data = await response.json();
       console.log(" Fetched reminders from backend:", data);
