@@ -156,81 +156,54 @@ const Reminders = () => {
 
   // ✅ Razorpay flow WITH email support
   const handleRazorpayPayment = async (reminder: Reminder) => {
-    try {
-      const response = await fetch(`${API_BASE}/api/payments/create-order`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount: reminder.amount || 100, // in INR
-          reminderId: reminder._id,
-        }),
-      });
+  try {
+    console.log("🔥 Starting payment");
 
-      const orderData = await response.json();
-      if (!orderData.success) {
-        toast.error("Failed to create Razorpay order");
-        return;
-      }
+    const response = await fetch(`${API_BASE}/api/payments/create-order`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        amount: reminder.amount || 100,
+        reminderId: reminder._id,
+      }),
+    });
 
-      const options = {
-        key: orderData.key || "",
-        amount:
-          orderData.order?.amount ||
-          (reminder.amount ? Math.round(reminder.amount * 100) : 100 * 100),
-        currency: "INR",
-        name: "Payble",
-        description: `Payment for ${reminder.bill_name}`,
-        order_id: orderData.order?.id || orderData.order_id,
-        handler: async function (resp: any) {
-          try {
-            const {
-              data: { session },
-            } = await supabase.auth.getSession();
-            const userEmail = session?.user?.email;
+    const orderData = await response.json();
 
-            const verifyRes = await fetch(`${API_BASE}/api/payments/verify`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                razorpay_order_id: resp.razorpay_order_id,
-                razorpay_payment_id: resp.razorpay_payment_id,
-                razorpay_signature: resp.razorpay_signature,
-                reminderId: reminder._id,
-                userEmail,
-                billName: reminder.bill_name,
-                amount: reminder.amount,
-              }),
-            });
+    console.log("📩 Create-order response:", response.status, orderData);
 
-            const verifyData = await verifyRes.json();
-            if (verifyData.success) {
-              toast.success("Payment successful!");
-              setReminders((prev) =>
-                prev.map((r) =>
-                  r._id === reminder._id
-                    ? { ...r, is_paid: true, paid_at: new Date().toISOString() }
-                    : r
-                )
-              );
-            } else {
-              console.error("Verify failed:", verifyData);
-              toast.error("Payment verification failed");
-            }
-          } catch (e) {
-            console.error("Error in Razorpay handler:", e);
-            toast.error("Something went wrong after payment");
-          }
-        },
-        theme: { color: "#3399cc" },
-      };
-
-      const rzp = new (window as any).Razorpay(options);
-      rzp.open();
-    } catch (error) {
-      console.error("Razorpay error:", error);
-      toast.error("Something went wrong with Razorpay");
+    if (!response.ok || !orderData.success) {
+      toast.error(orderData.message || "Failed to create Razorpay order");
+      return;
     }
-  };
+
+    const options = {
+      key: orderData.key,
+      amount: orderData.order.amount,
+      currency: "INR",
+      name: "Payble",
+      description: `Payment for ${reminder.bill_name}`,
+      order_id: orderData.order.id,
+
+      handler: async function (resp: any) {
+        toast.success("Payment success!");
+      },
+
+      theme: {
+        color: "#3399cc",
+      },
+    };
+
+    const rzp = new (window as any).Razorpay(options);
+    rzp.open();
+
+  } catch (error) {
+    console.error("❌ Razorpay frontend error:", error);
+    toast.error("Payment failed");
+  }
+};
 
   const handleMarkPaid = async (_id: string) => {
     try {
