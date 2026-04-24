@@ -29,7 +29,6 @@ interface Reminder {
   paid_at?: string | null;
 }
 
-// ✅ Single source of truth for backend URL
 const API_BASE = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL;
 
 const Reminders = () => {
@@ -154,7 +153,7 @@ const Reminders = () => {
     }
   };
 
-  // ✅ Razorpay flow WITH email support
+
   const handleRazorpayPayment = async (reminder: Reminder) => {
   try {
     console.log("🔥 Starting payment");
