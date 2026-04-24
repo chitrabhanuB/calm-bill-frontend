@@ -153,7 +153,7 @@ const Reminders = () => {
     }
   };
 
-
+  // ✅ Razorpay flow WITH email support
   const handleRazorpayPayment = async (reminder: Reminder) => {
   try {
     console.log("🔥 Starting payment");
@@ -186,9 +186,50 @@ const Reminders = () => {
       description: `Payment for ${reminder.bill_name}`,
       order_id: orderData.order.id,
 
-      handler: async function (resp: any) {
-        toast.success("Payment success!");
+      // ONLY replace your current Razorpay handler block with this exact code
+
+handler: async function (resp: any) {
+  try {
+    const verifyRes = await fetch(`${API_BASE}/api/payments/verify`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify({
+        razorpay_order_id: resp.razorpay_order_id,
+        razorpay_payment_id: resp.razorpay_payment_id,
+        razorpay_signature: resp.razorpay_signature,
+        reminderId: reminder._id,
+        billName: reminder.bill_name,
+        amount: reminder.amount,
+      }),
+    });
+
+    const verifyData = await verifyRes.json();
+
+    if (verifyData.success) {
+      toast.success("Payment success!");
+
+      // moves from pending to paid instantly
+      setReminders((prev) =>
+        prev.map((r) =>
+          r._id === reminder._id
+            ? {
+                ...r,
+                is_paid: true,
+                paid_at: new Date().toISOString(),
+              }
+            : r
+        )
+      );
+    } else {
+      toast.error("Payment verification failed");
+    }
+  } catch (error) {
+    console.error("Verify error:", error);
+    toast.error("Payment verify failed");
+  }
+},
 
       theme: {
         color: "#3399cc",
